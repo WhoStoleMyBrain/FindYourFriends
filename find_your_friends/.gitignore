@@ -44,3 +44,6 @@ app.*.map.json
 
 # Google Map API Key
 android/app/src/main/res/values/keys.xml
+
+# Firebase plugin
+lib/firebase_options.dart
