@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +18,19 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerUserName = TextEditingController();
+  Timer? _debounce;
+  bool usernameAvailable = true;
+  User? user;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    _controllerUserName.dispose();
+    super.dispose();
+  }
 
   Future<void> signInWithEmailAndPassword() async {
     try {
@@ -27,25 +43,56 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
     }
   }
 
-  Future<void> createUserWithEmailAndPassword() async {
+  Future<void> createUserWithEmailAndPasswordAndUsername() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
-          email: _controllerEmail.text, password: _controllerPassword.text);
+      await Auth()
+          .createUserWithEmailAndPassword(
+              email: _controllerEmail.text, password: _controllerPassword.text)
+          .whenComplete(() => user = Auth().currentUser);
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
       });
     }
+    var batch = FirebaseFirestore.instance.batch();
+    var userDoc = FirebaseFirestore.instance.doc('users/${user?.uid}');
+    var usernameDoc =
+        FirebaseFirestore.instance.doc('usernames/${_controllerUserName.text}');
+    batch.set(userDoc, {'username': _controllerUserName.text});
+    batch.set(usernameDoc, {'uid': user?.uid});
+    await batch.commit();
+    // try {
+    //   await FirebaseFirestore.instance
+    //       .collection('users')
+    //       .doc(user?.uid)
+    //       .set({'username': _controllerUserName.text});
+    // } catch (e) {
+    //   if (kDebugMode) {
+    //     print(e);
+    //   }
+    // }
+    // try {
+    //   await FirebaseFirestore.instance
+    //       .collection('usernames')
+    //       .doc(_controllerUserName.text)
+    //       .set({'username': user?.uid});
+    // } catch (e) {
+    //   if (kDebugMode) {
+    //     print(e);
+    //   }
+    // }
   }
 
   Widget _title() {
     return const Text('Firebase Auth');
   }
 
-  Widget _entryField(String title, TextEditingController controller) {
+  Widget _entryField(String title, TextEditingController controller,
+      {Function(String)? inputChanged}) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(labelText: title),
+      onChanged: inputChanged,
     );
   }
 
@@ -53,11 +100,18 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
     return Text(errorMessage == '' ? '' : 'Humm ? $errorMessage');
   }
 
+  Widget _usernameExistsMessage() {
+    return Text(
+      usernameAvailable ? 'Username Available' : 'Username not available',
+      style: TextStyle(color: usernameAvailable ? Colors.green : Colors.red),
+    );
+  }
+
   Widget _submitButton() {
     return ElevatedButton(
         onPressed: isLogin
             ? signInWithEmailAndPassword
-            : createUserWithEmailAndPassword,
+            : createUserWithEmailAndPasswordAndUsername,
         child: Text(isLogin ? 'Login' : 'Register'));
   }
 
@@ -69,6 +123,22 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
           });
         },
         child: Text(isLogin ? 'Register instead' : 'Login instead'));
+  }
+
+  void _checkUsernameAvailable(String username) {
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+    _debounce = Timer(const Duration(milliseconds: 1000), () async {
+      var username = _controllerUserName.text;
+      if (username.length >= 0 && username.length <= 15) {
+        var ref = FirebaseFirestore.instance.doc('usernames/$username');
+        var documentSnapshot = await ref.get();
+        setState(() {
+          usernameAvailable = !documentSnapshot.exists;
+        });
+      }
+    });
   }
 
   @override
@@ -85,6 +155,12 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
           children: <Widget>[
             _entryField('email', _controllerEmail),
             _entryField('password', _controllerPassword),
+            _entryField(
+              'username',
+              _controllerUserName,
+              inputChanged: _checkUsernameAvailable,
+            ),
+            _usernameExistsMessage(),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton(),
