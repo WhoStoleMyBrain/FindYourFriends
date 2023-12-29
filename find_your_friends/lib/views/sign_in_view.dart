@@ -13,7 +13,7 @@ OutlineInputBorder border = const OutlineInputBorder(
     borderSide: BorderSide(color: Constants.kBorderColor, width: 3.0));
 
 class SignInView extends StatelessWidget {
-  const SignInView({Key? key}) : super(key: key);
+  const SignInView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class SignInView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             systemOverlayStyle:
-                const SystemUiOverlayStyle(statusBarColor: Colors.white),
+                const SystemUiOverlayStyle(statusBarColor: Colors.blue),
           ),
           backgroundColor: Constants.kPrimaryColor,
           body: Center(
@@ -89,7 +89,7 @@ class SignInView extends StatelessWidget {
 }
 
 class _EmailField extends StatelessWidget {
-  const _EmailField({Key? key}) : super(key: key);
+  const _EmailField();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class _EmailField extends StatelessWidget {
 }
 
 class _PasswordField extends StatelessWidget {
-  const _PasswordField({Key? key}) : super(key: key);
+  const _PasswordField();
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ class _PasswordField extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
-  const _SubmitButton({Key? key}) : super(key: key);
+  const _SubmitButton();
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +173,6 @@ class _SubmitButton extends StatelessWidget {
                           .read<FormBloc>()
                           .add(const FormSubmitted(value: Status.signIn))
                       : null,
-                  child: const Text(Constants.textSignIn),
                   style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all<Color>(
                           Constants.kPrimaryColor),
@@ -181,6 +180,7 @@ class _SubmitButton extends StatelessWidget {
                           Constants.kBlackColor),
                       side: MaterialStateProperty.all<BorderSide>(
                           BorderSide.none)),
+                  child: const Text(Constants.textSignIn),
                 ),
               );
       },
@@ -189,7 +189,7 @@ class _SubmitButton extends StatelessWidget {
 }
 
 class _SignInNavigate extends StatelessWidget {
-  const _SignInNavigate({Key? key}) : super(key: key);
+  const _SignInNavigate();
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +222,7 @@ class _SignInNavigate extends StatelessWidget {
 
 class ErrorDialog extends StatelessWidget {
   final String? errorMessage;
-  const ErrorDialog({Key? key, required this.errorMessage}) : super(key: key);
+  const ErrorDialog({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {

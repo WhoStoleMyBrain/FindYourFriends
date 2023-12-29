@@ -1,8 +1,15 @@
 import 'dart:async';
 
-import 'package:find_your_friends/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/authentication/bloc/authentication_bloc.dart';
+import 'features/authentication/authentication_repository.dart';
+import 'features/database/bloc/database_bloc.dart';
+import 'features/database/database_repository.dart';
+import 'features/form_validation/bloc/form_bloc.dart';
+import 'my_app.dart';
+import 'observers/app_bloc_observer.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -10,22 +17,19 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const WidgetTree(),
-    );
-  }
+  Bloc.observer = AppBlocObserver();
+  // runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(
+      create: (context) => AuthenticationBloc(AuthenticationRepositoryImpl())
+        ..add(AuthenticationStarted()),
+    ),
+    BlocProvider(
+      create: (context) =>
+          FormBloc(AuthenticationRepositoryImpl(), DatabaseRepositoryImpl()),
+    ),
+    BlocProvider(
+      create: (context) => DatabaseBloc(DatabaseRepositoryImpl()),
+    )
+  ], child: const MyApp()));
 }

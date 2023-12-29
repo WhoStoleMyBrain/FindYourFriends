@@ -44,6 +44,9 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
   }
 
   Future<void> createUserWithEmailAndPasswordAndUsername() async {
+    if (!_validUserName(_controllerUserName.text)) {
+      return;
+    }
     try {
       await Auth()
           .createUserWithEmailAndPassword(
@@ -125,13 +128,17 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
         child: Text(isLogin ? 'Register instead' : 'Login instead'));
   }
 
+  bool _validUserName(String username) {
+    return username.length >= 3 && username.length <= 15;
+  }
+
   void _checkUsernameAvailable(String username) {
     if (_debounce?.isActive ?? false) {
       _debounce?.cancel();
     }
     _debounce = Timer(const Duration(milliseconds: 1000), () async {
       var username = _controllerUserName.text;
-      if (username.length >= 0 && username.length <= 15) {
+      if (_validUserName(username)) {
         var ref = FirebaseFirestore.instance.doc('usernames/$username');
         var documentSnapshot = await ref.get();
         setState(() {
@@ -139,6 +146,21 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
         });
       }
     });
+  }
+
+  List<Widget> _usernameFields() {
+    if (!isLogin) {
+      return [
+        _entryField(
+          'username',
+          _controllerUserName,
+          inputChanged: _checkUsernameAvailable,
+        ),
+        _usernameExistsMessage(),
+      ];
+    } else {
+      return [];
+    }
   }
 
   @override
@@ -155,12 +177,7 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
           children: <Widget>[
             _entryField('email', _controllerEmail),
             _entryField('password', _controllerPassword),
-            _entryField(
-              'username',
-              _controllerUserName,
-              inputChanged: _checkUsernameAvailable,
-            ),
-            _usernameExistsMessage(),
+            ..._usernameFields(),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton(),

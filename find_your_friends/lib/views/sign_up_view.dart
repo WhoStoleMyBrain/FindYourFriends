@@ -1,6 +1,8 @@
 import 'package:find_your_friends/pages/my_home_page.dart';
+import 'package:find_your_friends/views/sign_in_view.dart';
 import 'package:find_your_friends/views/welcome_view.dart';
 import 'package:find_your_friends/utils/constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,7 +74,9 @@ class SignUpView extends StatelessWidget {
                       SizedBox(height: size.height * 0.01),
                       const _AgeField(),
                       SizedBox(height: size.height * 0.01),
-                      const _SubmitButton()
+                      const _SubmitButton(),
+                      const _SignUpNavigate(),
+                      SizedBox(height: size.height * 0.01),
                     ]),
               ),
             )));
@@ -80,7 +84,7 @@ class SignUpView extends StatelessWidget {
 }
 
 class _EmailField extends StatelessWidget {
-  const _EmailField({super.key});
+  const _EmailField();
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +116,7 @@ class _EmailField extends StatelessWidget {
 }
 
 class _PasswordField extends StatelessWidget {
-  const _PasswordField({super.key});
+  const _PasswordField();
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +151,7 @@ class _PasswordField extends StatelessWidget {
 }
 
 class _DisplayNameField extends StatelessWidget {
-  const _DisplayNameField({super.key});
+  const _DisplayNameField();
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +183,7 @@ class _DisplayNameField extends StatelessWidget {
 }
 
 class _AgeField extends StatelessWidget {
-  const _AgeField({super.key});
+  const _AgeField();
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +217,7 @@ class _AgeField extends StatelessWidget {
 }
 
 class _SubmitButton extends StatelessWidget {
-  const _SubmitButton({super.key});
+  const _SubmitButton();
 
   @override
   Widget build(BuildContext context) {
@@ -242,6 +246,38 @@ class _SubmitButton extends StatelessWidget {
               );
       },
     );
+  }
+}
+
+class _SignUpNavigate extends StatelessWidget {
+  const _SignUpNavigate();
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(children: <TextSpan>[
+          const TextSpan(
+              text: Constants.textSignUpAcc,
+              style: TextStyle(
+                color: Constants.kDarkGreyColor,
+              )),
+          TextSpan(
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => {
+                      Navigator.of(context).pop(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignInView()),
+                      )
+                    },
+              text: Constants.textSignInInstead,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Constants.kDarkBlueColor,
+              )),
+        ]));
   }
 }
 
