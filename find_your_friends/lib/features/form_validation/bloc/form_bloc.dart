@@ -1,3 +1,4 @@
+import 'package:find_your_friends/features/database/bloc/database_repository.dart';
 import 'package:find_your_friends/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
