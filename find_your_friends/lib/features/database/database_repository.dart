@@ -1,4 +1,4 @@
-import 'package:find_your_friends/features/database/bloc/database_service.dart';
+import 'package:find_your_friends/features/database/database_service.dart';
 import 'package:find_your_friends/models/user_model.dart';
 
 class DatabaseRepositoryImpl implements DatabaseRepository {

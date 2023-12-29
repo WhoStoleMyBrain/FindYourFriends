@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
-import 'package:find_your_friends/features/database/bloc/database_repository.dart';
+import 'package:find_your_friends/features/database/database_repository.dart';
 import 'package:find_your_friends/models/user_model.dart';
-import 'package:meta/meta.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'database_event.dart';
 part 'database_state.dart';

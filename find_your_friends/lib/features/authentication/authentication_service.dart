@@ -19,7 +19,8 @@ class AuthenticationService {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: user.email!, password: user.password!);
-      verifyEmail();
+      // TODO: Add email verification to project again
+      // verifyEmail();
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code, message: e.message);

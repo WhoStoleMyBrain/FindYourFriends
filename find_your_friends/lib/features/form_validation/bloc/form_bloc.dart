@@ -1,8 +1,8 @@
-import 'package:find_your_friends/features/database/bloc/database_repository.dart';
+import 'package:find_your_friends/features/database/database_repository.dart';
 import 'package:find_your_friends/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:find_your_friends/features/authentication/bloc/authentication_repository.dart';
+import 'package:find_your_friends/features/authentication/authentication_repository.dart';
 
 import 'package:equatable/equatable.dart';
 
@@ -122,8 +122,11 @@ class FormBloc extends Bloc<FormEvent, FormsValidate> {
     if (state.isFormValid) {
       try {
         UserCredential? authUser = await _authenticationRepository.signUp(user);
-        UserModel updatedUser = user.copyWith(
-            uid: authUser!.user!.uid, isVerified: authUser.user!.emailVerified);
+        // UserModel updatedUser = user.copyWith(
+        //     uid: authUser!.user!.uid, isVerified: authUser.user!.emailVerified);
+        // TODO: Reimplement email verification
+        UserModel updatedUser =
+            user.copyWith(uid: authUser!.user!.uid, isVerified: true);
         await _databaseRepository.saveUserData(updatedUser);
         if (updatedUser.isVerified!) {
           emit(state.copyWith(isLoading: false, errorMessage: ""));
@@ -154,8 +157,10 @@ class FormBloc extends Bloc<FormEvent, FormsValidate> {
     if (state.isFormValid) {
       try {
         UserCredential? authUser = await _authenticationRepository.signIn(user);
-        UserModel updatedUser =
-            user.copyWith(isVerified: authUser!.user!.emailVerified);
+        // UserModel updatedUser =
+        //     user.copyWith(isVerified: authUser!.user!.emailVerified);
+        // TODO: Reimplement email verification
+        UserModel updatedUser = user.copyWith(isVerified: true);
         if (updatedUser.isVerified!) {
           emit(state.copyWith(isLoading: false, errorMessage: ""));
         } else {

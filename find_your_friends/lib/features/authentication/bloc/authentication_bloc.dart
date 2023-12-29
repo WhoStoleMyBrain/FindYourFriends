@@ -2,7 +2,7 @@ import 'package:find_your_friends/models/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'authentication_repository.dart';
+import '../authentication_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
