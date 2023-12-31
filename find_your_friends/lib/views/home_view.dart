@@ -1,6 +1,7 @@
 import 'package:find_your_friends/features/authentication/bloc/authentication_bloc.dart';
 import 'package:find_your_friends/features/database/bloc/database_bloc.dart';
 import 'package:find_your_friends/views/welcome_view.dart';
+import 'package:find_your_friends/widgets/user_location_poc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,21 +65,42 @@ class HomeView extends StatelessWidget {
                     child: Text(Constants.textNoData),
                   );
                 } else {
-                  return Center(
-                    child: ListView.builder(
-                      itemCount: state.listOfUserData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: ListTile(
-                            title:
-                                Text(state.listOfUserData[index].displayName!),
-                            subtitle: Text(state.listOfUserData[index].email!),
-                            trailing: Text(
-                                state.listOfUserData[index].age!.toString()),
+                  return Column(
+                    children: [
+                      Flexible(
+                        child: Container(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height,
+                              maxWidth: MediaQuery.of(context).size.width,
+                              minHeight:
+                                  MediaQuery.of(context).size.height * 0.5,
+                              minWidth: MediaQuery.of(context).size.width * 0.5,
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: UserLocationPoc()),
+                      ),
+                      Flexible(
+                        child: Center(
+                          child: ListView.builder(
+                            itemCount: state.listOfUserData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                child: ListTile(
+                                  title: Text(
+                                      state.listOfUserData[index].displayName!),
+                                  subtitle:
+                                      Text(state.listOfUserData[index].email!),
+                                  trailing: Text(state
+                                      .listOfUserData[index].age!
+                                      .toString()),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                    ],
                   );
                 }
               } else {
