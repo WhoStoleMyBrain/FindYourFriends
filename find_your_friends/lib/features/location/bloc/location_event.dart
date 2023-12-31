@@ -1,4 +1,10 @@
 part of 'location_bloc.dart';
 
-@immutable
-sealed class LocationEvent {}
+abstract class LocationEvent extends Equatable {
+  const LocationEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class FetchLocationEvent extends LocationEvent {}
