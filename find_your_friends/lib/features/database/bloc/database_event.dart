@@ -7,9 +7,17 @@ abstract class DatabaseEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class DatabaseFetched extends DatabaseEvent {
+class DatabaseUserFetched extends DatabaseEvent {
   final String? displayName;
-  const DatabaseFetched(this.displayName);
+  const DatabaseUserFetched(this.displayName);
   @override
   List<Object?> get props => [displayName];
+}
+
+class DatabaseGroupsFetched extends DatabaseEvent {
+  final List<GroupModel> groups;
+  const DatabaseGroupsFetched(this.groups);
+
+  @override
+  List<Object?> get props => [groups];
 }
