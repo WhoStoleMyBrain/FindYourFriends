@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:find_your_friends/features/form_group/bloc/form_group_bloc.dart';
+import 'package:find_your_friends/features/location/bloc/location_bloc.dart';
+import 'package:find_your_friends/features/location/location_repository.dart';
+import 'package:find_your_friends/features/user_location/bloc/user_location_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +34,16 @@ Future<void> main() async {
     ),
     BlocProvider(
       create: (context) => DatabaseBloc(DatabaseRepositoryImpl()),
-    )
+    ),
+    BlocProvider(
+      create: (context) => FormGroupBloc(
+          AuthenticationRepositoryImpl(), DatabaseRepositoryImpl()),
+    ),
+    BlocProvider(
+      create: (context) => LocationBloc(LocationRepositoryImpl()),
+    ),
+    BlocProvider(
+      create: (context) => UserLocationBloc(),
+    ),
   ], child: const MyApp()));
 }
