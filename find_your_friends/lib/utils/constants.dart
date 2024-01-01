@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Constants {
@@ -30,6 +29,8 @@ class Constants {
   static const textHome = "Home";
   static const textNoData = "No Data Available!";
   static const textFixIssues = "Please fill the data correctly!";
+  static const textCreateGroup = "Create your own group!";
+  static const textCreateGroupButton = "Create Group";
 
   //navigate
   static const signInNavigate = '/sign-in';
@@ -39,4 +40,13 @@ class Constants {
   static const statusBarColor = SystemUiOverlayStyle(
       statusBarColor: Constants.kPrimaryColor,
       statusBarIconBrightness: Brightness.dark);
+
+  // firebase paths
+  static const fbUserGroups = "UserGroups";
+  static const fbGroupUsers = "GroupUsers";
+  static const fbLocation = "location";
+  static const fbUsers = "Users";
+  static const fbGroups = "Groups";
+  static const fbUsernames = "usernames";
+  static const fbOldUsers = "users";
 }
