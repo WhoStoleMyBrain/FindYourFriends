@@ -10,20 +10,21 @@ class FormInitial extends FormState {
 }
 
 class FormsValidate extends FormState {
-  const FormsValidate(
-      {required this.email,
-      required this.password,
-      required this.isEmailValid,
-      required this.isPasswordValid,
-      required this.isFormValid,
-      required this.isLoading,
-      this.errorMessage = "",
-      required this.isNameValid,
-      required this.isAgeValid,
-      required this.isFormValidateFailed,
-      this.displayName,
-      required this.age,
-      this.isFormSuccessful = false});
+  const FormsValidate({
+    required this.email,
+    required this.password,
+    this.displayName,
+    required this.age,
+    required this.isEmailValid,
+    required this.isPasswordValid,
+    required this.isNameValid,
+    required this.isAgeValid,
+    required this.isFormValid,
+    required this.isFormValidateFailed,
+    this.isFormSuccessful = false,
+    required this.isLoading,
+    this.errorMessage = "",
+  });
 
   final String email;
   final String? displayName;
