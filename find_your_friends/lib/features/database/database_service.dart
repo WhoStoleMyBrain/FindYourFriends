@@ -58,14 +58,24 @@ class DatabaseService {
     return snapshot.data()!["displayName"];
   }
 
-  Future<List<GroupModel>> retrieveGroupData() async {
+  Stream<List<GroupModel>> retrieveGroupData() async* {
+    //TODO Add Pagination to request when filtering for userGroups (whereIn, see Firebase Documentation, currently limited to 30 requests)
+    //TODO Refactor to actual stream (updating values when data is changed... use .snapshots())
     User user = auth.currentUser!;
     DocumentSnapshot<Map<String, dynamic>> userGroups =
         await _db.collection(Constants.fbUserGroups).doc(user.uid).get();
-    var tmp = userGroups.data()!;
+    Map<String, dynamic> userGroupsData = userGroups.data()!;
+    userGroupsData.removeWhere((key, value) => value == false);
+    List<GroupModel> groups = await _db
+        .collection(Constants.fbGroups)
+        .where(FieldPath.documentId, whereIn: userGroupsData.keys)
+        .get()
+        .then((value) =>
+            value.docs.map((e) => GroupModel.fromDocumentSnapshot(e)).toList());
+
     if (kDebugMode) {
-      print("tmp: $tmp");
+      print("groups: ${groups.length}");
     }
-    return [];
+    yield groups;
   }
 }

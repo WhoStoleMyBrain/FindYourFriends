@@ -21,7 +21,7 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
   }
 
   @override
-  Future<List<GroupModel>> retrieveGroupData() {
+  Stream<List<GroupModel>> retrieveGroupData() {
     return service.retrieveGroupData();
   }
 }
@@ -30,5 +30,5 @@ abstract class DatabaseRepository {
   Future<void> saveUserData(UserModel user);
   Future<void> createNewGroup(UserModel user, GroupModel group);
   Future<List<UserModel>> retrieveUserData();
-  Future<List<GroupModel>> retrieveGroupData();
+  Stream<List<GroupModel>> retrieveGroupData();
 }
