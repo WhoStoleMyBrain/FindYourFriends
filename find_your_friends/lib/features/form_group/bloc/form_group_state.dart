@@ -12,6 +12,7 @@ class FormGroupValidate extends FormGroupState {
   FormGroupValidate({
     required this.groupName,
     required this.creator,
+    required this.creatorId,
     required this.members,
     required this.description,
     required this.isGroupNameValid,
@@ -26,6 +27,7 @@ class FormGroupValidate extends FormGroupState {
   });
   final String groupName;
   final String creator;
+  final String creatorId;
   final List<String> members;
   final String description;
   final bool isGroupNameValid;
@@ -41,6 +43,7 @@ class FormGroupValidate extends FormGroupState {
   FormGroupValidate copyWith({
     String? groupName,
     String? creator,
+    String? creatorId,
     List<String>? members,
     String? description,
     bool? isGroupNameValid,
@@ -56,6 +59,7 @@ class FormGroupValidate extends FormGroupState {
     return FormGroupValidate(
       groupName: groupName ?? this.groupName,
       creator: creator ?? this.creator,
+      creatorId: creatorId ?? this.creatorId,
       members: members ?? this.members,
       description: description ?? this.description,
       isGroupNameValid: isGroupNameValid ?? this.isGroupNameValid,
@@ -71,5 +75,19 @@ class FormGroupValidate extends FormGroupState {
   }
 
   @override
-  List<Object?> get props => [groupName, creator, members, description];
+  List<Object?> get props => [
+        groupName,
+        creator,
+        members,
+        description,
+        isGroupNameValid,
+        isCreatorValid,
+        isMembersValid,
+        isDescriptionValid,
+        isFormValid,
+        isFormValidateFailed,
+        isFormSuccessful,
+        isLoading,
+        errorMessage
+      ];
 }

@@ -19,6 +19,7 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
       : super(FormGroupValidate(
           groupName: "",
           creator: "",
+          creatorId: "",
           members: const [],
           description: "",
           isCreatorValid: false,
@@ -56,9 +57,7 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
 
   _onGroupNameChanged(
       GroupNameChanged event, Emitter<FormGroupValidate> emit) async {
-    UserModel user = await _authenticationRepository.getCurrentUser().first;
     emit(state.copyWith(
-      creator: user.uid,
       isFormSuccessful: false,
       isFormValid: false,
       isFormValidateFailed: false,
@@ -70,12 +69,15 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
 
   _onCreatorChanged(
       CreatorChanged event, Emitter<FormGroupValidate> emit) async {
+    UserModel user = await _authenticationRepository.getCurrentUser().first;
+    String? userName = await _authenticationRepository.retrieveUserName(user);
     emit(state.copyWith(
         isFormSuccessful: false,
         isFormValid: false,
         isFormValidateFailed: false,
         errorMessage: "",
-        creator: event.creator,
+        creatorId: event.creator,
+        creator: userName,
         isCreatorValid: _isCreatorValid(event.creator)));
   }
 
@@ -106,6 +108,7 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
     GroupModel group = GroupModel(
       groupName: state.groupName,
       creator: state.creator,
+      creatorId: state.creatorId,
       members: state.members,
       description: state.description,
     );
@@ -123,7 +126,7 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
     emit(state.copyWith(isFormSuccessful: true));
   }
 
-  bool _formValid(state) {
+  bool _formValid(FormGroupValidate state) {
     return _isCreatorValid(state.creator) &&
         _isDescriptionValid(state.description) &&
         _isGroupNameValid(state.groupName) &&
@@ -132,14 +135,15 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
 
   _createGroup(FormGroupSubmitted event, Emitter<FormGroupValidate> emit,
       GroupModel group, UserModel user) async {
-    emit(state.copyWith(
-        errorMessage: "", isLoading: true, isFormValid: _formValid(state)));
     // TODO: Somehow, when trying to see if state.isFormValid, this yields false,
     // even though in the FormBloc that exact code works and yields true... check for errors
+    print('state form valid: ${state.isFormValid}');
     if (_formValid(state)) {
+      print('Form valid!!!');
       try {
         await _databaseRepository.createNewGroup(user, group);
-        emit(state.copyWith(isLoading: false, errorMessage: ""));
+        emit(state.copyWith(
+            isLoading: false, errorMessage: "", isFormValid: true));
       } on FirebaseException catch (e) {
         emit(state.copyWith(
             isLoading: false, errorMessage: e.message, isFormValid: false));
