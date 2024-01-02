@@ -1,6 +1,7 @@
 import 'package:find_your_friends/features/authentication/bloc/authentication_bloc.dart';
 import 'package:find_your_friends/features/database/bloc/database_bloc.dart';
 import 'package:find_your_friends/views/group_creation_view.dart';
+import 'package:find_your_friends/views/group_overview_view.dart';
 import 'package:find_your_friends/views/welcome_view.dart';
 import 'package:find_your_friends/widgets/user_location_poc.dart';
 import 'package:flutter/material.dart';
@@ -112,15 +113,32 @@ class HomeView extends StatelessWidget {
             }
           },
         ),
-        floatingActionButton: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const GroupCreationView()),
-                (route) => false,
-              );
-            },
-            child: const Text('Press Me!')),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const GroupCreationView()),
+                    (route) => false,
+                  );
+                },
+                child: const Text('Create new Group!')),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.01,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => GroupOverviewView()),
+                    (route) => false,
+                  );
+                },
+                child: const Text('Group Overview!')),
+          ],
+        ),
       );
     });
   }

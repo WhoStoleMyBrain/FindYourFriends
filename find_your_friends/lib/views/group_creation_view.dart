@@ -2,6 +2,8 @@ import 'package:find_your_friends/features/authentication/authentication_reposit
 import 'package:find_your_friends/features/form_group/bloc/form_group_bloc.dart';
 import 'package:find_your_friends/models/user_model.dart';
 import 'package:find_your_friends/utils/constants.dart';
+import 'package:find_your_friends/views/group_overview_view.dart';
+import 'package:find_your_friends/views/home_view.dart';
 import 'package:find_your_friends/views/sign_in_view.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -17,29 +19,42 @@ class GroupCreationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocListener<FormGroupBloc, FormGroupValidate>(
-      listener: (context, state) async {
-        if (state.errorMessage.isNotEmpty) {
-          showDialog(
-            context: context,
-            builder: (context) => ErrorDialog(errorMessage: state.errorMessage),
-          );
-        } else if (state.isFormValid && !state.isLoading) {
-          context.read<FormGroupBloc>().add(FormGroupSucceeded());
-        } else if (state.isFormValidateFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(Constants.textFixIssues)));
-        } else if (state.creator != "" && !state.isCreatorValid) {
-          if (kDebugMode) {
-            //TODO: Refactor usage of build context across async gaps
-            print(
-                "Using build context across async here, since we need the user once at the beginning of the form... refactor but not sure how");
-          }
-          UserModel user =
-              await AuthenticationRepositoryImpl().getCurrentUser().first;
-          context.read<FormGroupBloc>().add(CreatorChanged(user.uid!));
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<FormGroupBloc, FormGroupValidate>(
+          listener: (context, state) async {
+            // print(state);
+            if (state.errorMessage.isNotEmpty) {
+              showDialog(
+                context: context,
+                builder: (context) =>
+                    ErrorDialog(errorMessage: state.errorMessage),
+              );
+            } else if (state.isFormSuccessful) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => GroupOverviewView(),
+                  ),
+                  (route) => false);
+            } else if (state.isFormValid && !state.isLoading) {
+              context.read<FormGroupBloc>().add(FormGroupSucceeded());
+            } else if (state.isFormValidateFailed) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text(Constants.textFixIssues)));
+            }
+            if (state.creator == "" && !state.isCreatorValid) {
+              if (kDebugMode) {
+                //TODO: Refactor usage of build context across async gaps
+                print(
+                    "Using build context across async here, since we need the user once at the beginning of the form... refactor but not sure how");
+              }
+              UserModel user =
+                  await AuthenticationRepositoryImpl().getCurrentUser().first;
+              context.read<FormGroupBloc>().add(CreatorChanged(user.uid!));
+            }
+          },
+        )
+      ],
       child: Scaffold(
         backgroundColor: Constants.kPrimaryColor,
         body: Center(
@@ -74,6 +89,16 @@ class GroupCreationView extends StatelessWidget {
             ],
           ),
         )),
+        floatingActionButton: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const HomeView(),
+                ),
+                (route) => false);
+          },
+          child: const Text('Home'),
+        ),
       ),
     );
   }
