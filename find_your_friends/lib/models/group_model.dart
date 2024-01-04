@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupModel {
   String? groupName;
+  String? groupId;
   String? creator;
   List<String>? members;
   String? description;
@@ -9,6 +10,7 @@ class GroupModel {
 
   GroupModel(
       {this.groupName,
+      this.groupId,
       this.creator,
       this.members,
       this.description,
@@ -27,10 +29,12 @@ class GroupModel {
       : groupName = doc.data()!["groupName"],
         creator = doc.data()!["creator"],
         description = doc.data()!["description"],
-        creatorId = doc.data()!["description"];
+        creatorId = doc.data()!["description"],
+        groupId = doc.id;
 
   GroupModel copyWith({
     String? groupName,
+    String? groupId,
     String? creator,
     List<String>? members,
     String? description,
@@ -38,6 +42,7 @@ class GroupModel {
   }) {
     return GroupModel(
       groupName: groupName ?? this.groupName,
+      groupId: groupId ?? this.groupId,
       creator: creator ?? this.creator,
       members: members ?? this.members,
       description: description ?? this.description,
