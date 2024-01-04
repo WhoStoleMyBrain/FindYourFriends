@@ -51,7 +51,6 @@ class GroupDetailView extends StatelessWidget {
               if (snapshot.data!.isEmpty) {
                 return const Center(child: CircularProgressIndicator());
               }
-              print("snapshot data: ${snapshot.data}");
               return GoogleMap(
                 zoomControlsEnabled: true,
                 zoomGesturesEnabled: true,
@@ -66,16 +65,6 @@ class GroupDetailView extends StatelessWidget {
                             BitmapDescriptor.hueMagenta));
                   })
                 },
-                // Marker(
-                //     position: LatLng(
-                //       // snapshot.data.userLocation.latitude
-                //       snapshot.data?.userLocation?.latitude ?? 0,
-                //       snapshot.data?.userLocation?.longitude ?? 0,
-                //     ),
-                //     markerId: const MarkerId('id'),
-                //     icon: BitmapDescriptor.defaultMarkerWithHue(
-                //         BitmapDescriptor.hueMagenta)),
-
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
                       snapshot.data?.first.userLocation?.latitude ?? 0,

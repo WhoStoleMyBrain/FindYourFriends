@@ -23,7 +23,6 @@ class GroupCreationView extends StatelessWidget {
       listeners: [
         BlocListener<FormGroupBloc, FormGroupValidate>(
           listener: (context, state) async {
-            // print(state);
             if (state.errorMessage.isNotEmpty) {
               showDialog(
                 context: context,

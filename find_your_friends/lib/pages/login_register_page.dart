@@ -64,26 +64,6 @@ class _LoginRegisterPageState extends State<LoginRegisterPage> {
     batch.set(userDoc, {'username': _controllerUserName.text});
     batch.set(usernameDoc, {'uid': user?.uid});
     await batch.commit();
-    // try {
-    //   await FirebaseFirestore.instance
-    //       .collection('users')
-    //       .doc(user?.uid)
-    //       .set({'username': _controllerUserName.text});
-    // } catch (e) {
-    //   if (kDebugMode) {
-    //     print(e);
-    //   }
-    // }
-    // try {
-    //   await FirebaseFirestore.instance
-    //       .collection('usernames')
-    //       .doc(_controllerUserName.text)
-    //       .set({'username': user?.uid});
-    // } catch (e) {
-    //   if (kDebugMode) {
-    //     print(e);
-    //   }
-    // }
   }
 
   Widget _title() {
