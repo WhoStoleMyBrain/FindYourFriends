@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_your_friends/models/custom_location_data.dart';
+import 'package:find_your_friends/models/group_location.dart';
 import 'package:find_your_friends/models/group_model.dart';
 import 'package:find_your_friends/models/user_model.dart';
 import 'package:find_your_friends/utils/constants.dart';
@@ -77,5 +79,31 @@ class DatabaseService {
       print("groups: ${groups.length}");
     }
     yield groups;
+  }
+
+  Stream<List<GroupLocation>> listenToGroupLocation(String groupId) async* {
+    //TODO Refactor whereIn to use pagination, since only 30 entries are allowed.
+    //TODO Only necessary of groups > 30 people are allowed
+    // Returns all the user ids in this group, with value either true or false
+    Map<String, dynamic>? groupUsersData = await _db
+        .collection(Constants.fbGroupUsers)
+        .doc(groupId)
+        .get()
+        .then((value) => value.data()?..removeWhere((key, value) => !value));
+    Stream<QuerySnapshot<Map<String, dynamic>>> locationData = _db
+        .collection(Constants.fbLocation)
+        .where(FieldPath.documentId, whereIn: groupUsersData?.keys)
+        .snapshots();
+
+    // latitude: 37.4219983
+    // longitude: -122.084
+    await for (QuerySnapshot<Map<String, dynamic>> entry in locationData) {
+      yield entry.docs
+          .map((e) => GroupLocation(
+              groupId: groupId,
+              userName: e.data()["name"],
+              userLocation: LocationDataImpl.fromMap(e.data())))
+          .toList();
+    }
   }
 }
