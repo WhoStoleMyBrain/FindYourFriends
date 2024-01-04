@@ -9,7 +9,6 @@ class UserLocationService {
     await _requestPermission();
     loc.changeSettings(interval: 1000);
     // final LocationData locationResult = await loc.getLocation();
-
     yield* loc.onLocationChanged;
   }
 
