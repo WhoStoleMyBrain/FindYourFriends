@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:find_your_friends/features/form_group/bloc/form_group_bloc.dart';
+import 'package:find_your_friends/features/group_location/bloc/group_location_bloc.dart';
 import 'package:find_your_friends/features/location/bloc/location_bloc.dart';
 import 'package:find_your_friends/features/location/location_repository.dart';
 import 'package:find_your_friends/features/user_location/bloc/user_location_bloc.dart';
@@ -45,5 +46,8 @@ Future<void> main() async {
     BlocProvider(
       create: (context) => UserLocationBloc(),
     ),
+    BlocProvider(
+      create: (context) => GroupLocationBloc(),
+    )
   ], child: const MyApp()));
 }
