@@ -74,10 +74,6 @@ class DatabaseService {
         .get()
         .then((value) =>
             value.docs.map((e) => GroupModel.fromDocumentSnapshot(e)).toList());
-
-    if (kDebugMode) {
-      print("groups: ${groups.length}");
-    }
     yield groups;
   }
 

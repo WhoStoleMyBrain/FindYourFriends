@@ -137,9 +137,7 @@ class FormGroupBloc extends Bloc<FormGroupEvent, FormGroupValidate> {
       GroupModel group, UserModel user) async {
     // TODO: Somehow, when trying to see if state.isFormValid, this yields false,
     // even though in the FormBloc that exact code works and yields true... check for errors
-    print('state form valid: ${state.isFormValid}');
     if (_formValid(state)) {
-      print('Form valid!!!');
       try {
         await _databaseRepository.createNewGroup(user, group);
         emit(state.copyWith(

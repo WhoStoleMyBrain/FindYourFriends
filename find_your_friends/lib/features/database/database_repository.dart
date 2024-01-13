@@ -1,5 +1,5 @@
 import 'package:find_your_friends/features/database/database_service.dart';
-import 'package:find_your_friends/models/group_location.dart';
+
 import 'package:find_your_friends/models/group_model.dart';
 import 'package:find_your_friends/models/user_model.dart';
 
@@ -25,11 +25,6 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
   Stream<List<GroupModel>> retrieveGroupData() {
     return service.retrieveGroupData();
   }
-
-  // @override
-  // Stream<GroupLocation> listenToGroupLocation(String groupId) {
-  //   return service.listenToGroupLocation();
-  // }
 }
 
 abstract class DatabaseRepository {
